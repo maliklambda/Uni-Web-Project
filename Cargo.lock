@@ -432,7 +432,7 @@ checksum = "0bf256ce5efdfa370213c1dabab5935a12e49f2c58d15e9eac2870d3b4f27263"
 [[package]]
 name = "sypher"
 version = "0.1.0"
-source = "git+https://github.com/maliklambda/sypher#e88d6178654162429f5e99b14986306755ef0de9"
+source = "git+https://github.com/maliklambda/sypher#4bafc8d2031634e1091f143e7bf791bc33039686"
 dependencies = [
  "uuid",
 ]
