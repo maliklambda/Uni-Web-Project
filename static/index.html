@@ -1,0 +1,158 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Text Request</title>
+
+    <style>
+        body {
+            max-width: 640px;
+            margin: 3rem auto;
+            padding: 0 1rem;
+            font: 16px/1.5 system-ui, sans-serif;
+        }
+
+        textarea {
+            box-sizing: border-box;
+            display: block;
+            width: 100%;
+            min-height: 8rem;
+            margin: 0.5rem 0 1rem;
+            padding: 0.75rem;
+            font: inherit;
+        }
+
+        button {
+            padding: 0.6rem 1rem;
+            font: inherit;
+            cursor: pointer;
+        }
+
+        button:disabled {
+            cursor: not-allowed;
+            opacity: 0.5;
+        }
+
+        #output {
+            min-height: 3rem;
+            padding: 0.75rem;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+            white-space: pre-wrap;
+            overflow-wrap: anywhere;
+        }
+
+        #status {
+            min-height: 1.5em;
+            color: #555;
+        }
+    </style>
+</head>
+
+<body>
+    <main>
+        <h1>Enter a Sypher-Query</h1>
+
+        <p>
+        The documentation for the sypher query is available 
+        <a href="https://github.com/maliklambda/sypher", target="_blank">here</a>.
+        For a few quick examples check out the examples in the 
+        <a href="https://github.com/maliklambda/Sypher/blob/master/src/examples.rs", target="_blank">source code</a>.
+        </p>
+        <!-- Input and send button -->
+        <form id="message-form">
+
+            <label for="message">Your text</label>
+
+            <textarea
+                id="message"
+                name="text"
+                placeholder="Type something..."
+                required
+            ></textarea>
+
+            <button id="send-button" type="submit">
+                Send
+            </button>
+
+        </form>
+
+        <!-- Request status -->
+        <h2>Request Status</h2>
+        <p id="status" role="status" aria-live="polite"></p>
+
+        <!-- Server response -->
+        <h2>Server response</h2>
+
+        <div
+            id="output"
+            role="region"
+            aria-live="polite"
+        >
+            The server response will appear here.
+        </div>
+
+    </main>
+
+    <script>
+        const form = document.querySelector("#message-form");
+        const messageInput = document.querySelector("#message");
+        const sendButton = document.querySelector("#send-button");
+        const output = document.querySelector("#output");
+        const status = document.querySelector("#status");
+
+        form.addEventListener("submit", async (event) => {
+            event.preventDefault();
+
+            const query = messageInput.value.trim();
+
+            if (!query) {
+                status.textContent = "Please enter some text.";
+                return;
+            }
+
+            sendButton.disabled = true;
+            status.textContent = "Sending...";
+            output.textContent = "";
+
+            try {
+                // Relative URL: automatically uses the current domain.
+                const response = await fetch("/api/check", {
+                    method: "POST",
+
+                    headers: {
+                        "Content-Type": "application/json",
+                        "Accept": "application/json"
+                    },
+
+                    body: JSON.stringify({
+                        query: query
+                    })
+                });
+
+                if (!response.ok) {
+                    throw new Error(
+                        `Request failed (${response.status})`
+                    );
+                }
+
+                const data = await response.json();
+
+                // Display the server response.
+                output.textContent =
+                    data.result ??
+                    "The server returned no response text.";
+
+                status.textContent = "Done.";
+
+            } catch (error) {
+                status.textContent = `Error: ${error.message}`;
+
+            } finally {
+                sendButton.disabled = false;
+            }
+        });
+    </script>
+</body>
+</html>
