@@ -142,7 +142,7 @@
                 // Display the server response.
                 output.textContent =
                     data.result ??
-                    "The server returned no response text.";
+                    "The server returned no response text. This is most likely due to the query containing a feature that is still in implementation and causes the thread that calls the parser function to panic. Try a different query to see if the issue persists";
 
                 status.textContent = "Done.";
 

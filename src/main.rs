@@ -25,11 +25,11 @@ fn parse_query(input: &str) -> String {
     println!("Received query: '{input}'");
     let query = Query::from_str(input);
     let res = sypher::parser::parse_query::parse_query(query);
-    format!(
-        "Parsed Response ({}): {:?}",
-        if res.is_ok() { "valid" } else { "error" },
-        res
-    )
+    if res.is_ok() {
+        format!("Your query's syntax is valid. Here is the Debug-representation of the generated IR:\n\n{:?}", res)
+    } else {
+        format!("There is a syntactic error in the query:\n\n{:?}", res)
+    }
 }
 
 async fn check_query(
