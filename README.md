@@ -4,8 +4,10 @@ This project attempts to serve a web interface for visualizing and syntax-checki
 
 ## View the hosted Application
 The application is hosted publicly on [Render](https://render.com/).
-<br>
 Click here to go to the [deployed version](https://uni-web-technologies-project.onrender.com/).
+(Note that there may be startup delay when opening the link. 
+This is due to Render's free tier saving on CPU cost.
+Should you experience longer waits, feel free to send me an email.)
 
 ## Local Development
 To run the application locally, follow these steps:
