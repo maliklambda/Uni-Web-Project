@@ -1,7 +1,11 @@
 use axum::{
-    Json, Router, http::StatusCode, response::{Html, IntoResponse, Response}, routing::{get, post},
+    Json, Router,
+    http::StatusCode,
+    response::Html,
+    routing::{get, post},
 };
-use serde::{Serialize, Deserialize};
+use serde::{Deserialize, Serialize};
+use sypher::parser::query::Query;
 
 async fn index() -> Html<&'static str> {
     Html(include_str!("../static/index.html"))
@@ -17,21 +21,25 @@ struct CheckQueryResponse {
     pub result: String,
 }
 
-impl IntoResponse for CheckQueryResponse {
-    fn into_response(self) -> Response {
-        todo!()
-    }
+fn parse_query(input: &str) -> String {
+    println!("Received query: '{input}'");
+    let query = Query::from_str(input);
+    let res = sypher::parser::parse_query::parse_query(query);
+    format!(
+        "Parsed Response ({}): {:?}",
+        if res.is_ok() { "valid" } else { "error" },
+        res
+    )
 }
 
-fn parse_query(query: &str) -> String {
-    println!("Received query: '{query}'");
-    format!("Parsed Response: {query}")
-}
-
-async fn check_query(Json(query_req): Json<CheckQueryRequest>) -> (StatusCode, Json<CheckQueryResponse>) {
+async fn check_query(
+    Json(query_req): Json<CheckQueryRequest>,
+) -> (StatusCode, Json<CheckQueryResponse>) {
     let query = query_req.query;
     let parser_result = parse_query(&query);
-    let res = CheckQueryResponse {result: parser_result};
+    let res = CheckQueryResponse {
+        result: parser_result,
+    };
     (StatusCode::OK, Json(res))
 }
 
@@ -47,7 +55,5 @@ async fn main() {
 
     println!("Listening on http://127.0.0.1:3000");
 
-    axum::serve(listener, app)
-        .await
-        .expect("server error");
+    axum::serve(listener, app).await.expect("server error");
 }
