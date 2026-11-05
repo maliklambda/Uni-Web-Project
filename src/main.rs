@@ -49,11 +49,16 @@ async fn main() {
         .route("/api/check", post(check_query))
         .route("/", get(index));
 
-    let listener = tokio::net::TcpListener::bind("127.0.0.1:3000")
-        .await
-        .expect("failed to bind");
+    let port = std::env::var("PORT")
+        .unwrap_or_else(|_| "3000".to_string());
 
-    println!("Listening on http://127.0.0.1:3000");
+    let listener = tokio::net::TcpListener::bind(
+        format!("0.0.0.0:{}", port)
+    )
+    .await
+    .expect("failed to bind");
+
+    println!("Listening on http://0.0.0.0:{}", port);
 
     axum::serve(listener, app).await.expect("server error");
 }
