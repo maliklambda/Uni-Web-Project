@@ -3,9 +3,9 @@ This project attempts to serve a web interface for visualizing and syntax-checki
 [Sypher Query Language](https://github.com/maliklambda/sypher).
 
 ## View the hosted Application
-The application is hosted publicly on [Render](https://render.com/) using a docker image hosted on [Docker Hub](https://hub.docker.com/). 
+The application is hosted publicly on [Render](https://render.com/).
 <br>
-Click here to go to the [deployed version](https://example.com). <!-- TODO: change this link to the deployed-site -->
+Click here to go to the [deployed version](https://uni-web-technologies-project.onrender.com/).
 
 ## Local Development
 To run the application locally, follow these steps:
